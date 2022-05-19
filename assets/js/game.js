@@ -6,10 +6,14 @@ var playerMoney = 10;
 
 // sets up the enemy robot's info
 var enemyNames = ["Roborto", "Amy Android", "Robo Trumble"];
-var enemyHealth = 50; 
+var enemyHealth =  50
 var enemyAttack = 12;
 
-console.log(enemyNames, enemyNames.length, enemyNames[0], enemyNames[3]);
+var randomNumber = function(min, max) {
+    var value = Math.floor(Math.random() * (max - min + 1 ) + min);
+
+    return value;
+};
 
 // fight function (now with parameter for enemy's name)
 var fight = function(enemyName) {
@@ -26,14 +30,17 @@ var fight = function(enemyName) {
                 if (confirmSkip) {
                    window.alert(playerName + " has decided to skip this fight. Goodbye!");
                     //subtract money from player for skipping
-                     playerMoney = playerMoney - 10;
+                     playerMoney = Math.max(0, playerMoney - 10);
                       console.log("playerMoney", playerMoney);
                     break;
                 }
             }
 
+         // generate random damage value based on player's attack
+         var damage = randomNumber(playerAttack - 3, playerAttack);
+
             // subtract the value of playerAttack from enemyHealth and update enemyHealth with the result
-            enemyHealth = enemyHealth - playerAttack;
+            enemyHealth = Math.max(0, enemyHealth - damage);
             // Log a resulting message to the console to confirm that it worked.
             console.log(
                 playerName + " attacked " + enemyName + ". " + enemyName + " now has " + enemyHealth + " health remaining."
@@ -51,9 +58,11 @@ var fight = function(enemyName) {
                 } else {
                     window.alert(enemyName + " still has " + enemyHealth + " health left.");
                 }
-                    
+
+        // generate random damage based on enemy's attack
+        var damage = randomNumber(enemyAttack - 3, enemyAttack);
             // Subtract the value of enemyAttack from playerHealth and update playerHealth with the result
-            playerHealth = playerHealth - enemyAttack;
+            playerHealth = Math.max(0, playerHealth - damage);
             console.log(
                 enemyName + " attacked " + playerName + ". " + playerName + " now has " + playerHealth + " health remaining."
                 );
@@ -66,7 +75,6 @@ var fight = function(enemyName) {
             } else {
                 window.alert(playerName + " still has " + playerHealth + " health left.");
             }
-                        
         } // end of while loop
     }; // end of fight function
 
@@ -85,13 +93,13 @@ var startGame = function() {
             // if player is still alive, keep fighting
             if (playerHealth > 0) {
                 // let player know what round they're in
-                window.alert("Welcome to Robot Gladiators! Round " + (i + 1) );
+                window.alert("Welcome to Robot Gladiators! Round " + (i + 1));
                 
                 // pick new enemy to fight based on the index of the enemyNames array
                 var pickedEnemyName = enemyNames[i];
     
                 // reset enemyHealth before starting new fight
-                enemyHealth = 50;
+                 enemyHealth = randomNumber(40, 60);
     
     
                 // pass the pickedEnemyName variable's value into the fight function, where it will assume the value of the enemyName parameter
@@ -107,7 +115,6 @@ var startGame = function() {
                     shop();
                     }
                 }
-    
             // if player isn't alive, stop the game
             } else {
                 window.alert("You have lost your robot in battle! Game Over!");
@@ -193,14 +200,4 @@ var shop = function() {
 //start the game when the page loads
 startGame();
 
-//PSEUDOCODE FOR NEW FEATURES    
-/*    --IF PLAYER DEFEATS A BOT OR SKIPS A FIGHT (AND THERE ARE MORE ROBOTS TO FIGHT), 
-    THEY ARE ASKED IF THEY WANT TO VISIT THE SHOP
-            * Ask the player if they want to shop
-            * If no, continue as normal
-            * If yes, call the shop() function
-            * In shop() function, ask player if they want to "refill" health, "upgrade" attack, or "leave" the shop
-                    If refill, subtract money points from player and increase health
-                    If upgrade, subtract money points and increase attack 
-                    If leave, alert goodbye and exit function
-                    If other invalid option, call shop() again*/
+
